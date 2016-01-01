@@ -1,0 +1,15 @@
+{
+  "name": "PlayByTurn",
+  "version": "0.0.0",
+  "description": "A simple server to ensure nobody controls a group's playlist",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "SylvieLorxu",
+  "license": "AGPL-3.0",
+  "dependencies": {
+    "express": "^4.13.3",
+    "socket.io": "^1.3.7"
+  }
+}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlayByTurn</title>
+</head>
+
+<body>
+  <h1>PlayByTurn</h1>
+  <p><a id="addSong" href="#">Add song</a></p>
+  <p><a href="/play">Player (only open on one system)</a></p>
+  <p><small>PlayByTurn is released under the GNU Affero General Public License and available on <a href="https://notabug.org/SylvieLorxu/PlayByTurn">NotABug</a>.</small></p>
+  <script type="text/javascript">
+    document.getElementById('addSong').onclick = function() {
+      var url = prompt("Enter an URL and be patient");
+      var xhr = new XMLHttpRequest();
+      if (url != null) {
+        console.log("Adding song...");
+        xhr.open('GET', '/add?url=' + url, true);
+        xhr.onload = function() {
+          alert(xhr.responseText);
+        };
+        xhr.send();
+      };
+    };
+  </script>
+</body>
+</html>

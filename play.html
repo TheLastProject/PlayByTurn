@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PlayByTurn</title>
+</head>
+
+<body>
+  <h1>PlayByTurn</h1>
+  <p><a id="nextSong" href="#">Next song</a></p>
+  <p id="playing">Nothing playing...</p>
+  <audio controls id="player"></audio>
+  <p><small>PlayByTurn is released under the GNU Affero General Public License and available on <a href="https://notabug.org/SylvieLorxu/PlayByTurn">NotABug</a>.</small></p>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+    var socket = io.connect('http://' + window.location.hostname + ':3000/');
+    var songInfoElement = document.getElementById('playing');
+    var songElement = document.getElementById('player');
+
+    document.getElementById('nextSong').onclick = function() {
+      console.log('Switching song!');
+      socket.emit('songEnd');
+    };
+
+    songElement.addEventListener('ended', function() {
+      socket.emit('songEnd');
+      songInfoElement.innerHTML = 'Nothing playing...';
+    });
+
+    socket.on('newSong', function (data) {
+      songElement.innerHTML = '<source src="/currentFile?' + data['url'] + '"></source>';
+
+      songElement.pause();
+      songElement.load();
+      songElement.play();
+
+      songInfoElement.innerHTML = 'Currently playing: <a href="' + data['url'] + '">' + data['url'] + '</a>';
+    });
+  </script>
+</body>
+</html>
