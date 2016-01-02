@@ -14,6 +14,8 @@
   <p><small>PlayByTurn is released under the GNU Affero General Public License and available on <a href="https://notabug.org/SylvieLorxu/PlayByTurn">NotABug</a>.</small></p>
   <script src="/socket.io/socket.io.js"></script>
   <script>
+    window.history.replaceState(null, '', '/play');
+
     var audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
     var socket = io.connect('http://' + window.location.hostname + ':3000/');
