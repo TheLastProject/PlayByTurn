@@ -14,6 +14,15 @@ var currentSong;
 // Save played songs and randomly play them when we run out
 var playedSongs = [];
 
+var options = {};
+
+process.argv.slice(2).forEach(function (value) {
+    if (value.indexOf("--") === 0) {
+        value = value.split("=")
+        options[value[0].slice(2)] = value[1];
+    };
+});
+
 try {
     fs.mkdirSync('downloads');
 } catch (e) {
@@ -90,7 +99,18 @@ app.get('/currentFile', function (ignore, res) {
     res.sendFile(__dirname + '/downloads/' + currentSong.split('/').join('_') + '.ogg');
 });
 
-app.get('/play', function (ignore, res) {
+app.get('/play', function (req, res) {
+    if (options.playpassword !== undefined) {
+        if (req.query.pass === undefined) {
+            res.send('Password required. Please add ?pass= followed by the password to the end of this URL.');
+            return;
+        }
+
+        if (req.query.pass !== options.playpassword) {
+            res.send('Incorrect password.');
+            return;
+        }
+    }
     res.sendFile(__dirname + '/play.html');
 });
 
