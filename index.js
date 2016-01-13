@@ -96,20 +96,23 @@ app.get('/', function (ignore, res) {
 });
 
 app.get('/currentFile', function (ignore, res) {
-    res.sendFile(__dirname + '/downloads/' + currentSong.split('/').join('_') + '.ogg', function(err) {
-        if (!err) {
-            return;
+    var filename = currentSong.split('/').join('_')
+
+    fs.lstat('downloads/' + filename + '.ogg', function (err) {
+        if (err && err.code === 'ENOENT') {
+            console.log(currentSong + " cannot be sent: " + err + ". Skipping.");
+
+            var index = playedSongs.indexOf(currentSong);
+
+            // Remove song from previous playlist if it exists
+            if (index != -1) {
+                playedSongs.splice(index, 1);
+            }
+
+            nextSong(true);
+        } else {
+            res.sendFile(__dirname + '/downloads/' + currentSong.split('/').join('_') + '.ogg');
         }
-        console.log(currentSong + " cannot be sent. Skipping.");
-
-        var index = playedSongs.indexOf(currentSong);
-
-        // Remove song from previous playlist if it exists
-        if (index != -1) {
-            playedSongs.splice(index, 1);
-        }
-
-        nextSong(true);
     });
 });
 
